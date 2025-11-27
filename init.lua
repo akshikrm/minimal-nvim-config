@@ -3,10 +3,10 @@ vim.opt.number = true
 
 vim.opt.swapfile = false
 vim.opt.backup = false
-vim.opt.undodir = os.getenv("HOME" .. "/.vim/undodir")
+vim.opt.undodir = os.getenv("~/.vim/undodir")
 vim.opt.undofile = true
 
-vim.opt.termguicolors = false
+vim.opt.termguicolors = true
 vim.opt.spelllang = "en_us"
 vim.opt.spell = true
 
@@ -16,7 +16,9 @@ vim.opt.cursorline = true
 vim.opt.statusline = "%f%h%m%r%w  %= %y %l,%c | %P"
 
 vim.opt.shortmess:append("c")
-vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.completeopt = { "popup", "menuone", "noinsert" }
+
+vim.go.pumheight = 15
 
 vim.g.mapleader = " "
 
@@ -29,14 +31,16 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
-
 -- navigation
 vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the top window" })
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the bottom window" })
 
+vim.keymap.set("n", "n", "nzzzv", { desc = "center after next search match" })
+vim.keymap.set("n", "N", "Nzzzv", { desc = "center after previous search match" })
 vim.keymap.set("n", "fe", vim.cmd.Ex, { desc = "[F]ile [E]xplorer" })
+
 
 
 -- packages
@@ -44,7 +48,13 @@ require("nvim-surround").setup({})
 require("nvim-treesitter.configs").setup({
 	ensure_installed = { "lua", "vim", "javascript", "json", "go" },
 	highlight = { enable = true },
+	indent = { enable = true },
 })
+
+require("Comment").setup({
+	pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
+})
+
 
 require("conform").setup({
 	formatters_by_ft = {
@@ -64,6 +74,52 @@ require("conform").setup({
 		timeout_ms = 1000,
 	},
 })
+
+
+require('rose-pine').setup({
+	variant = "main",
+	dim_inactive_windows = false,
+	extend_background_behind_borders = true,
+	styles = {
+		bold = false,
+		italic = false,
+		transparency = true,
+	},
+	groups = {
+		border = "muted",
+		link = "iris",
+		panel = "surface",
+
+		error = "love",
+		hint = "iris",
+		info = "foam",
+		note = "pine",
+		todo = "rose",
+		warn = "gold",
+
+		git_add = "foam",
+		git_change = "rose",
+		git_delete = "love",
+		git_dirty = "rose",
+		git_ignore = "muted",
+		git_merge = "iris",
+		git_rename = "pine",
+		git_stage = "iris",
+		git_text = "rose",
+		git_untracked = "subtle",
+
+		h1 = "iris",
+		h2 = "foam",
+		h3 = "rose",
+		h4 = "gold",
+		h5 = "pine",
+		h6 = "foam",
+	},
+
+})
+
+vim.cmd("colorscheme rose-pine")
+
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLSPConfig", {}),
@@ -106,5 +162,5 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 vim.lsp.enable({
 	"lua_ls",
-	"ts_ls",
+	"vtsls",
 })
