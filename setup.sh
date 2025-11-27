@@ -2,7 +2,7 @@
 
 set -e
 
-NVIM_DIR="$HOME/.config/nvim-rewrite"
+NVIM_DIR="$HOME/.config/minimal-nvim"
 PACK_DIR="$NVIM_DIR/pack/plugins/start"
 
 echo "Creating Neovim directory structure..."
